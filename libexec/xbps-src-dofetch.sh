@@ -75,8 +75,9 @@ fi
 
 cd $srcdir || msg_error "$pkgver: cannot change dir to $srcdir!\n"
 for f in ${distfiles}; do
-	curfile=$(basename $f)
+	curfile=$(basename "${f#*>}")
 	distfile="$srcdir/$curfile"
+
 	while true; do
 		flock -w 1 ${distfile}.part true
 		if [ $? -eq 0 ]; then
@@ -111,7 +112,7 @@ for f in ${distfiles}; do
 	msg_normal "$pkgver: fetching distfile '$curfile'...\n"
 
 	if [ -n "$distfiles" ]; then
-		localurl="$f"
+		localurl="${f%>*}"
 	else
 		localurl="$url/$curfile"
 	fi
